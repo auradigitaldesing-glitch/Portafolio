@@ -33,6 +33,7 @@ const projects: Project[] = [
     title: 'Ilustración digital',
     description: 'Exploración visual',
     tags: ['Ilustración', 'Visual'],
+    liveUrl: '/ilustraciones',
   },
   {
     id: 4,
