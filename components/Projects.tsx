@@ -19,7 +19,7 @@ const projects: Project[] = [
     title: 'Elvira Strategy — Web',
     description: 'Diseño web con enfoque visual',
     tags: ['Web', 'Visual'],
-    liveUrl: '#',
+    liveUrl: '/elvira',
   },
   {
     id: 2,
