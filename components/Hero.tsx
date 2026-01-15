@@ -39,6 +39,34 @@ export default function Hero() {
       ref={containerRef}
       className="relative h-screen w-full flex items-center justify-center overflow-hidden"
     >
+      {/* Floating orbs for depth - blue background */}
+      <motion.div
+        className="absolute top-20 left-20 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl"
+        animate={{
+          x: [0, 50, 0],
+          y: [0, 30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+        animate={{
+          x: [0, -30, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
       {/* Visual mockups - Left side */}
       <motion.div
         style={{

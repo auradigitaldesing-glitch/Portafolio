@@ -9,10 +9,10 @@ export default function Home() {
       {/* Global background - same as hero */}
       <div className="fixed inset-0 bg-gradient-to-br from-black via-gray-950 to-black -z-10" />
       
-      {/* Floating orbs - continuous throughout */}
+      {/* Floating orbs - continuous throughout with more blue */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-500/15 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
       </div>
 
       {/* Grain texture - global */}
