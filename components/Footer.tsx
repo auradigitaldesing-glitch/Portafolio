@@ -8,79 +8,40 @@ export default function Footer() {
   return (
     <footer id="contacto" className="py-12 px-6 border-t border-gray-800">
       <div className="container mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Mi Portafolio
-            </h3>
-            <p className="text-gray-400">
-              Desarrollador apasionado por crear soluciones digitales
-              innovadoras.
-            </p>
-          </div>
+        <div className="text-center mb-8">
+          <h3 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            ¿Hablamos?
+          </h3>
+          <a
+            href="mailto:atapiarubio487@gmail.com"
+            className="text-xl md:text-2xl text-gray-300 hover:text-cyan-400 transition-colors inline-block mb-4"
+          >
+            atapiarubio487@gmail.com
+          </a>
+          <p className="text-gray-400 mt-6">
+            Disponible para trabajo remoto, híbrido o en oficina.
+          </p>
+        </div>
 
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Enlaces</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#inicio"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors"
-                >
-                  Inicio
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#proyectos"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors"
-                >
-                  Proyectos
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#contacto"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors"
-                >
-                  Contacto
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Contacto</h4>
-            <div className="flex flex-col space-y-3">
-              <a
-                href="mailto:tu@email.com"
-                className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
-              >
-                <FaEnvelope />
-                <span>tu@email.com</span>
-              </a>
-              <div className="flex gap-4">
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors"
-                  aria-label="GitHub"
-                >
-                  <FaGithub size={24} />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <FaLinkedin size={24} />
-                </a>
-              </div>
-            </div>
-          </div>
+        <div className="flex justify-center gap-6 mb-8">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-cyan-400 transition-colors"
+            aria-label="GitHub"
+          >
+            <FaGithub size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-cyan-400 transition-colors"
+            aria-label="LinkedIn"
+          >
+            <FaLinkedin size={24} />
+          </a>
         </div>
 
         <div className="border-t border-gray-800 pt-8 text-center">

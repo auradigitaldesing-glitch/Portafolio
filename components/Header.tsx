@@ -35,7 +35,7 @@ export default function Header() {
             href="#inicio"
             className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:scale-105 transition-transform"
           >
-            Mi Portafolio
+            Alfonso Tapia
           </a>
 
           {/* Desktop Menu */}
@@ -69,7 +69,7 @@ export default function Header() {
                 <FaLinkedin size={20} />
               </a>
               <a
-                href="mailto:tu@email.com"
+                href="mailto:atapiarubio487@gmail.com"
                 className="text-gray-300 hover:text-cyan-400 transition-colors"
                 aria-label="Email"
               >
@@ -122,7 +122,7 @@ export default function Header() {
                   <FaLinkedin size={20} />
                 </a>
                 <a
-                  href="mailto:tu@email.com"
+                  href="mailto:atapiarubio487@gmail.com"
                   className="text-gray-300 hover:text-cyan-400 transition-colors"
                   aria-label="Email"
                 >

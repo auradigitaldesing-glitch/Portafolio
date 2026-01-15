@@ -22,27 +22,28 @@ export default function Hero() {
       >
         <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent animate-fade-in">
           Hola, soy{' '}
-          <span className="text-white">Desarrollador</span>
+          <span className="text-white">Alfonso Tapia</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-300 mb-8 animate-slide-up">
-          Creando experiencias digitales increíbles con código
+          Diseño web, visual y motion con intención
         </p>
         <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto animate-slide-up">
-          Bienvenido a mi portafolio. Aquí encontrarás algunos de mis proyectos
-          personales y trabajos más destacados.
+          Trabajo entre diseño web, contenido visual y motion.
+          Me interesa crear piezas claras, funcionales y bien pensadas,
+          donde el diseño no solo se vea bien, sino que diga algo.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a
             href="#proyectos"
             className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-cyan-500/50"
           >
-            Ver Proyectos
+            Ver proyectos
           </a>
           <a
             href="#contacto"
             className="px-8 py-3 border-2 border-cyan-400 text-cyan-400 rounded-lg font-semibold hover:bg-cyan-400 hover:text-gray-900 transform hover:scale-105 transition-all duration-200"
           >
-            Contactar
+            Contacto
           </a>
         </div>
         <div className="mt-16 animate-bounce">

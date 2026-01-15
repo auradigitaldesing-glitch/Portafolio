@@ -6,8 +6,8 @@ interface Project {
   id: number
   title: string
   description: string
-  technologies: string[]
-  githubUrl: string
+  tags: string[]
+  githubUrl?: string
   liveUrl?: string
   image?: string
 }
@@ -15,38 +15,40 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    title: 'Proyecto Ejemplo 1',
+    title: 'Elvira Strategy — Web',
     description:
-      'Una aplicación web moderna construida con las últimas tecnologías. Incluye funcionalidades avanzadas y una interfaz de usuario intuitiva.',
-    technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js'],
-    githubUrl: 'https://github.com',
+      'Diseño web con enfoque en claridad, cercanía y experiencia visual desde el primer contacto.',
+    tags: ['Web', 'Visual'],
     liveUrl: 'https://example.com',
   },
   {
     id: 2,
-    title: 'Proyecto Ejemplo 2',
+    title: 'RXLab — Web Design',
     description:
-      'Sistema de gestión con arquitectura escalable y diseño responsivo. Optimizado para rendimiento y experiencia de usuario.',
-    technologies: ['Node.js', 'Express', 'MongoDB', 'React'],
-    githubUrl: 'https://github.com',
+      'Interfaz para plataforma de salud, pensada para jerarquía visual, lectura clara y uso sencillo.',
+    tags: ['Web', 'Visual'],
     liveUrl: 'https://example.com',
   },
   {
     id: 3,
-    title: 'Proyecto Ejemplo 3',
+    title: 'Retrato ilustrado',
     description:
-      'Aplicación móvil con funcionalidades en tiempo real. Implementa las mejores prácticas de desarrollo y diseño.',
-    technologies: ['React Native', 'Firebase', 'TypeScript'],
-    githubUrl: 'https://github.com',
+      'Exploración visual a partir de forma, color y composición.',
+    tags: ['Ilustración', 'Visual'],
   },
   {
     id: 4,
-    title: 'Proyecto Ejemplo 4',
+    title: 'Contenido visual para redes',
     description:
-      'Plataforma web con integración de APIs externas y dashboard interactivo. Enfocado en usabilidad y accesibilidad.',
-    technologies: ['Vue.js', 'Python', 'Django', 'PostgreSQL'],
-    githubUrl: 'https://github.com',
-    liveUrl: 'https://example.com',
+      'Serie de piezas gráficas creadas para comunicar ideas de forma directa y visual.',
+    tags: ['Contenido', 'Visual'],
+  },
+  {
+    id: 5,
+    title: 'Elvira Strategy — Motion',
+    description:
+      'Pieza de motion y edición de video como extensión de la identidad visual.',
+    tags: ['Motion', 'Visual'],
   },
 ]
 
@@ -56,12 +58,8 @@ export default function Projects() {
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            Mis Proyectos
+            Proyectos
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Aquí están algunos de mis proyectos personales. Cada uno representa
-            un desafío único y una oportunidad de aprendizaje.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
@@ -78,15 +76,17 @@ export default function Projects() {
                   {project.title}
                 </h3>
                 <div className="flex gap-3">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-cyan-400 transition-colors"
-                    aria-label="Ver código en GitHub"
-                  >
-                    <FaGithub size={20} />
-                  </a>
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-cyan-400 transition-colors"
+                      aria-label="Ver código en GitHub"
+                    >
+                      <FaGithub size={20} />
+                    </a>
+                  )}
                   {project.liveUrl && (
                     <a
                       href={project.liveUrl}
@@ -106,12 +106,12 @@ export default function Projects() {
               </p>
 
               <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
+                {project.tags.map((tag) => (
                   <span
-                    key={tech}
+                    key={tag}
                     className="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-medium border border-cyan-500/30"
                   >
-                    {tech}
+                    {tag}
                   </span>
                 ))}
               </div>
@@ -119,20 +119,6 @@ export default function Projects() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-400 mb-4">
-            ¿Quieres ver más proyectos?
-          </p>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors border border-gray-700 hover:border-cyan-500/50"
-          >
-            <FaGithub />
-            Ver más en GitHub
-          </a>
-        </div>
       </div>
     </section>
   )
