@@ -71,6 +71,24 @@ export default function Hero() {
         }}
       />
 
+      {/* Grain texture overlay */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] z-0"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px',
+        }}
+      />
+
+      {/* Decorative line element */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent z-0"
+        style={{ transform: 'translateY(-50%)' }}
+      />
+
       {/* Main content with 3D tilt effect */}
       <motion.div
         style={{
@@ -84,7 +102,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-7xl md:text-9xl font-light text-white mb-6 tracking-tight"
+          className="text-8xl md:text-[12rem] font-extralight text-white mb-8 tracking-[-0.02em] leading-[0.9]"
           style={{ transform: 'translateZ(50px)' }}
         >
           Alfonso Tapia
@@ -94,8 +112,8 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-lg md:text-xl text-gray-400 font-light tracking-wider"
-          style={{ transform: 'translateZ(30px)' }}
+          className="text-base md:text-lg text-gray-500 font-extralight tracking-[0.2em] uppercase"
+          style={{ transform: 'translateZ(30px)', letterSpacing: '0.3em' }}
         >
           Design · Visual · Motion
         </motion.p>

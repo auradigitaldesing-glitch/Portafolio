@@ -11,37 +11,45 @@ export default function Contact() {
   })
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 py-32">
+    <section className="relative min-h-screen flex items-center justify-center px-6 py-40">
+      {/* Visual separator */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+      
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        className="text-center max-w-2xl mx-auto"
       >
+        {/* Main heading */}
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="text-6xl md:text-8xl font-extralight text-white mb-16 tracking-tight"
+        >
+          ¿Hablamos?
+        </motion.h2>
+
+        {/* Email as protagonist */}
         <motion.a
           href="mailto:atapiarubio487@gmail.com"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center gap-4 text-gray-400 hover:text-cyan-400 transition-colors group"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          whileHover={{ y: -2 }}
+          className="inline-block text-2xl md:text-3xl text-gray-400 hover:text-cyan-400 transition-colors duration-300 font-extralight tracking-wide mb-12"
         >
-          <motion.div
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.6 }}
-            className="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors"
-          >
-            <FaEnvelope size={18} />
-          </motion.div>
-          <span className="text-lg md:text-xl font-light tracking-wide">
-            atapiarubio487@gmail.com
-          </span>
+          atapiarubio487@gmail.com
         </motion.a>
         
+        {/* Subtle secondary text */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="mt-8 text-sm text-gray-500 font-light"
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="text-sm text-gray-600 font-extralight tracking-wider uppercase"
         >
           Disponible para trabajo remoto, híbrido o en oficina
         </motion.p>

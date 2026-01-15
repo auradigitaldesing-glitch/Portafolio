@@ -104,52 +104,62 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           rotateY,
           transformStyle: 'preserve-3d',
         }}
-        className="relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-xl border border-gray-800/50 rounded-2xl p-8 cursor-pointer group"
+        className="relative cursor-pointer group"
       >
-        {/* Glow effect on hover */}
+        {/* Subtle background glow */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 to-blue-500/0 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
-          animate={isHovered ? { opacity: 0.2 } : { opacity: 0 }}
+          className="absolute -inset-4 bg-gradient-to-br from-cyan-500/0 to-blue-500/0 rounded-3xl opacity-0 group-hover:opacity-10 blur-2xl transition-opacity duration-700"
+          animate={isHovered ? { opacity: 0.1 } : { opacity: 0 }}
         />
 
         <div className="relative z-10">
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-2xl md:text-3xl font-light text-white group-hover:text-cyan-400 transition-colors duration-300">
-              {project.title}
-            </h3>
-            {project.liveUrl && (
-              <motion.a
-                href={project.liveUrl}
-                whileHover={{ scale: 1.1 }}
-                className="text-gray-500 hover:text-cyan-400 transition-colors"
-              >
-                <FaExternalLinkAlt size={18} />
-              </motion.a>
-            )}
+          {/* Project number / index */}
+          <div className="mb-8">
+            <span className="text-6xl md:text-7xl font-extralight text-gray-900 leading-none">
+              {String(index + 1).padStart(2, '0')}
+            </span>
           </div>
 
-          <p className="text-gray-400 text-sm mb-6 font-light">
-            {project.description}
-          </p>
+          {/* Title - more prominent */}
+          <div className="mb-6">
+            <h3 className="text-3xl md:text-4xl font-extralight text-white group-hover:text-cyan-400 transition-colors duration-500 leading-tight mb-3">
+              {project.title}
+            </h3>
+            {/* Single line description */}
+            <p className="text-sm text-gray-500 font-light">
+              {project.description}
+            </p>
+          </div>
 
-          <div className="flex flex-wrap gap-2">
+          {/* Tags - more minimal */}
+          <div className="flex flex-wrap gap-3">
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-gray-800/50 text-gray-400 rounded-full text-xs font-light border border-gray-700/50"
+                className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
               >
                 {tag}
               </span>
             ))}
           </div>
+
+          {/* External link - more subtle */}
+          {project.liveUrl && (
+            <motion.a
+              href={project.liveUrl}
+              whileHover={{ x: 4 }}
+              className="absolute top-0 right-0 text-gray-700 hover:text-cyan-400 transition-colors mt-2"
+            >
+              <FaExternalLinkAlt size={14} />
+            </motion.a>
+          )}
         </div>
 
-        {/* Depth effect */}
-        <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        {/* Subtle border on hover */}
+        <motion.div
+          className="absolute inset-0 border border-gray-900 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{
-            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
-            transform: 'translateZ(-20px)',
+            borderColor: 'rgba(6, 182, 212, 0.2)',
           }}
         />
       </motion.div>
@@ -159,21 +169,24 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
 export default function Projects() {
   return (
-    <section className="relative min-h-screen py-32 px-6 md:px-12">
+    <section className="relative min-h-screen py-40 px-6 md:px-12">
+      {/* Visual separator */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+      
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-32"
         >
-          <h2 className="text-5xl md:text-7xl font-light text-white mb-4 tracking-tight">
+          <h2 className="text-6xl md:text-8xl font-extralight text-white mb-6 tracking-tight">
             Proyectos
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
