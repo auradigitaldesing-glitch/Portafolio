@@ -1,6 +1,6 @@
 import ProjectShowcase from '@/components/ProjectShowcase'
 
-// Ejemplo de datos - reemplazar con tus imágenes/videos reales
+// Reemplazar con tus imágenes/videos reales del proyecto Elvira Strategy
 const elviraMedia = [
   {
     id: 1,
@@ -58,4 +58,3 @@ export default function ElviraPage() {
     </main>
   )
 }
-
