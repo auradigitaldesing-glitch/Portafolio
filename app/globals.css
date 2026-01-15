@@ -77,3 +77,19 @@ h1, h2, h3 {
     z-index: 9999;
   }
 }
+
+/* Slow pulse animation for orbs */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}

@@ -1,7 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { FaEnvelope } from 'react-icons/fa'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
 export default function Contact() {
@@ -10,17 +10,27 @@ export default function Contact() {
     triggerOnce: true,
   })
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [30, 0, -30])
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 py-40">
-      {/* Visual separator */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
-      
+    <motion.section
+      ref={containerRef}
+      style={{ opacity, y }}
+      className="relative min-h-screen flex items-center justify-center px-6 py-40"
+    >
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        className="text-center max-w-2xl mx-auto"
+        className="text-center max-w-3xl mx-auto"
       >
         {/* Main heading */}
         <motion.h2
@@ -54,7 +64,6 @@ export default function Contact() {
           Disponible para trabajo remoto, híbrido o en oficina
         </motion.p>
       </motion.div>
-    </section>
+    </motion.section>
   )
 }
-
