@@ -213,23 +213,23 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
 function VideoPlayer({ src, index }: { src: string; index: number }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isMuted, setIsMuted] = useState(true)
-  const [isPlaying, setIsPlaying] = useState(true)
 
   const handleClick = () => {
     if (videoRef.current) {
-      if (isMuted) {
-        videoRef.current.muted = false
-        setIsMuted(false)
-      }
-      if (!isPlaying) {
-        videoRef.current.play()
-        setIsPlaying(true)
-      }
+      videoRef.current.muted = false
+      setIsMuted(false)
     }
   }
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group cursor-pointer" onClick={handleClick}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group cursor-pointer"
+      onClick={handleClick}
+    >
       <video
         ref={videoRef}
         src={src}
@@ -238,18 +238,16 @@ function VideoPlayer({ src, index }: { src: string; index: number }) {
         muted={isMuted}
         playsInline
         className="w-full h-full object-cover"
-        onPause={() => setIsPlaying(false)}
-        onPlay={() => setIsPlaying(true)}
       />
-      {/* Audio indicator */}
+      {/* Audio indicator - mostrar siempre cuando está muteado */}
       {isMuted && (
-        <div className="absolute top-2 right-2 bg-black/50 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute top-2 right-2 bg-black/70 rounded-full p-2">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6.343 6.343l11.314 11.314M6.343 17.657L17.657 6.343" />
           </svg>
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }
 
@@ -324,9 +322,13 @@ function ProjectWithVideos({ project, index }: { project: Project; index: number
           transition={{ duration: 0.8, delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
-          {project.videos?.map((video, videoIndex) => (
-            <VideoPlayer key={videoIndex} src={video} index={videoIndex} />
-          ))}
+          {project.videos && project.videos.length > 0 ? (
+            project.videos.map((video, videoIndex) => (
+              <VideoPlayer key={videoIndex} src={video} index={videoIndex} />
+            ))
+          ) : (
+            <p className="text-gray-500">No hay videos disponibles</p>
+          )}
         </motion.div>
       </div>
     </motion.div>
