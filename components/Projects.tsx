@@ -29,7 +29,7 @@ const projects: Project[] = [
     title: 'RXLab — Web Design',
     description: 'Interfaz para plataforma de salud',
     tags: ['Web', 'Visual'],
-    images: ['/images/Rxlab1.png', '/images/Rxlab2.png'],
+    images: ['/images/Rxlab2.png', '/images/Rxlab1.png'],
     externalUrl: 'https://pymes.rxlab.mx/',
   },
   {
