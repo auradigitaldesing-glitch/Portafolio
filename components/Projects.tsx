@@ -192,7 +192,7 @@ function VimeoEmbed({ videoId }: { videoId: string }) {
   const embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&muted=1&controls=1&background=0&responsive=1`
 
   return (
-    <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+    <div className="relative w-full aspect-square md:aspect-video bg-black rounded-lg overflow-hidden">
       <iframe
         src={embedUrl}
         className="absolute top-0 left-0 w-full h-full"
@@ -270,12 +270,12 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
           </div>
         </motion.div>
 
-        {/* Vimeo videos grid */}
+        {/* Vimeo videos grid - más grande como las imágenes */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
         >
           {project.vimeoVideos && project.vimeoVideos.length > 0 ? (
             project.vimeoVideos.map((videoId, videoIndex) => (
@@ -285,6 +285,7 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: videoIndex * 0.1 }}
+                className="w-full"
               >
                 <VimeoEmbed videoId={videoId} />
               </motion.div>
