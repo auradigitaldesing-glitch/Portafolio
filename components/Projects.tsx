@@ -1,10 +1,9 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform, useScroll, useTransform as useScrollTransform } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FaExternalLinkAlt } from 'react-icons/fa'
-import Image from 'next/image'
 
 interface Project {
   id: number
@@ -51,47 +50,107 @@ const projects: Project[] = [
   },
 ]
 
-function IllustrationBlock({ image, index }: { image: string; index: number }) {
-  const blockRef = useRef<HTMLDivElement>(null)
+function IllustrationsProject({ project, index }: { project: Project; index: number }) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
-    target: blockRef,
-    offset: ["start end", "end start"]
+    target: containerRef,
+    offset: ["start start", "end end"]
   })
 
-  const opacity = useScrollTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-  const scale = useScrollTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1, 0.96])
-  const y = useScrollTransform(scrollYProgress, [0, 0.5, 1], [30, 0, -30])
+  // Calcular qué imagen mostrar basado en el scroll
+  const imageIndex = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    [0, 1, 1]
+  )
 
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: false,
   })
 
+  // Calcular opacidad de cada imagen
+  const image1Opacity = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 1, 0])
+  const image2Opacity = useTransform(scrollYProgress, [0.2, 0.5, 1], [0, 1, 1])
+
   return (
-    <motion.div
-      ref={blockRef}
-      style={{
-        opacity,
-        scale,
-        y,
-      }}
-      className="relative py-16 md:py-24"
-    >
-      <div ref={ref} className="relative w-full max-w-4xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full aspect-auto"
-        >
-          <img
-            src={image}
-            alt={`Ilustración ${index + 1}`}
-            className="w-full h-auto object-contain"
-          />
-        </motion.div>
+    <div ref={containerRef} className="relative min-h-[200vh]">
+      {/* Sticky container - se queda fijo mientras cambian las imágenes */}
+      <div className="sticky top-0 min-h-screen flex items-center py-32 md:py-40">
+        <div ref={ref} className="w-full max-w-7xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
+            {/* Left side - Text content */}
+            <div className="relative z-10">
+              {/* Project number */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.8 }}
+                className="mb-12"
+              >
+                <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </motion.div>
+
+              {/* Title */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="mb-4"
+              >
+                <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
+                  {project.title}
+                </h3>
+                <p className="text-base md:text-lg text-gray-500 font-extralight">
+                  {project.description}
+                </p>
+              </motion.div>
+
+              {/* Tags */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="flex flex-wrap gap-4 mt-8"
+              >
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Right side - Images that change on scroll */}
+            <div className="relative w-full aspect-square md:aspect-auto md:h-[70vh]">
+              {project.images?.map((image, imgIndex) => (
+                <motion.div
+                  key={imgIndex}
+                  style={{
+                    opacity: imgIndex === 0 ? image1Opacity : image2Opacity,
+                  }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <motion.img
+                    src={image}
+                    alt={`Ilustración ${imgIndex + 1}`}
+                    className="w-full h-full object-contain"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -102,90 +161,88 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
     offset: ["start end", "end start"]
   })
 
-  const opacity = useScrollTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
-  const y = useScrollTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -50])
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -50])
 
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: false,
   })
 
+  // Si tiene imágenes, usar el componente especial
+  if (project.images) {
+    return <IllustrationsProject project={project} index={index} />
+  }
+
   return (
-    <>
-      <motion.div
-        ref={itemRef}
-        style={{
-          opacity,
-          y,
-        }}
-        className="relative py-32 md:py-40"
-      >
-        <div ref={ref} className="max-w-5xl mx-auto px-6 md:px-12">
-          {/* Project number - large and subtle */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8 }}
-            className="mb-12"
-          >
-            <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          </motion.div>
+    <motion.div
+      ref={itemRef}
+      style={{
+        opacity,
+        y,
+      }}
+      className="relative py-32 md:py-40"
+    >
+      <div ref={ref} className="max-w-5xl mx-auto px-6 md:px-12">
+        {/* Project number - large and subtle */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
+        >
+          <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </motion.div>
 
-          {/* Title - prominent */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-4"
-          >
-            <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
-              {project.title}
-            </h3>
-            <p className="text-base md:text-lg text-gray-500 font-extralight">
-              {project.description}
-            </p>
-          </motion.div>
+        {/* Title - prominent */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-4"
+        >
+          <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
+            {project.title}
+          </h3>
+          <p className="text-base md:text-lg text-gray-500 font-extralight">
+            {project.description}
+          </p>
+        </motion.div>
 
-          {/* Tags - minimal */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-wrap gap-4 mt-8"
-          >
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* External link - subtle */}
-          {project.liveUrl && (
-            <motion.a
-              href={project.liveUrl}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              whileHover={{ x: 4 }}
-              className="absolute top-32 right-6 md:right-12 text-gray-700 hover:text-cyan-400 transition-colors"
+        {/* Tags - minimal */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="flex flex-wrap gap-4 mt-8"
+        >
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
             >
-              <FaExternalLinkAlt size={16} />
-            </motion.a>
-          )}
-        </div>
-      </motion.div>
+              {tag}
+            </span>
+          ))}
+        </motion.div>
 
-      {/* Render illustrations if this project has images */}
-      {project.images && project.images.map((image, imgIndex) => (
-        <IllustrationBlock key={imgIndex} image={image} index={imgIndex} />
-      ))}
-    </>
+        {/* External link - subtle */}
+        {project.liveUrl && (
+          <motion.a
+            href={project.liveUrl}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            whileHover={{ x: 4 }}
+            className="absolute top-32 right-6 md:right-12 text-gray-700 hover:text-cyan-400 transition-colors"
+          >
+            <FaExternalLinkAlt size={16} />
+          </motion.a>
+        )}
+      </div>
+    </motion.div>
   )
 }
 
