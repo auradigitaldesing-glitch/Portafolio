@@ -173,7 +173,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-sm text-gray-600 font-extralight tracking-wider"
+          className="text-sm text-white font-extralight tracking-wider"
         >
           Alfonso Tapia · CDMX
         </motion.div>
