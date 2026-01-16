@@ -276,12 +276,12 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
           </div>
         </motion.div>
 
-        {/* Vimeo videos grid - más grande como las imágenes */}
+        {/* Vimeo videos grid - 3 videos por línea */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           {project.vimeoVideos && project.vimeoVideos.length > 0 ? (
             project.vimeoVideos.map((videoId, videoIndex) => (
