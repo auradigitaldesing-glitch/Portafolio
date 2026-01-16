@@ -19,7 +19,7 @@ export default function ElviraPage() {
     triggerOnce: false,
   })
 
-  const images = ['/images/elvira.png', '/images/Elvira 2.png']
+  const images = ['/images/elvira.png', '/images/Elvira%202.png']
 
   return (
     <main className="relative min-h-screen bg-black overflow-hidden">
