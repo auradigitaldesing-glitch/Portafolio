@@ -328,10 +328,11 @@ function ProjectWithVideos({ project, index }: { project: Project; index: number
           {project.videos && project.videos.length > 0 ? (
             project.videos.map((video, videoIndex) => {
               // Layout asimétrico: primer video más grande, otros distribuidos
+              const videoCount = project.videos?.length || 0
               let size: 'large' | 'normal' | 'small' = 'normal'
               if (videoIndex === 0) {
                 size = 'large'
-              } else if (videoIndex === project.videos.length - 1 && project.videos.length > 3) {
+              } else if (videoIndex === videoCount - 1 && videoCount > 3) {
                 size = 'normal'
               }
               
