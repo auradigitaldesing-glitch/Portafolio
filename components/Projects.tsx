@@ -12,7 +12,8 @@ interface Project {
   tags: string[]
   liveUrl?: string
   images?: string[] // Para proyectos con imágenes integradas
-  videos?: string[] // Para proyectos con videos
+  videos?: string[] // Para proyectos con videos locales
+  vimeoVideos?: string[] // Para proyectos con videos de Vimeo (IDs o URLs)
   externalUrl?: string // URL externa para botón
 }
 
@@ -72,6 +73,13 @@ const projects: Project[] = [
       '/videos/5.mp4',
     ],
   },
+  {
+    id: 6,
+    title: 'Videos de Vimeo',
+    description: 'Selección de trabajos en video',
+    tags: ['Motion', 'Video'],
+    vimeoVideos: [], // Agregar IDs de Vimeo aquí cuando estén listos
+  },
 ]
 
 function ProjectWithImages({ project, index }: { project: Project; index: number }) {
@@ -88,21 +96,24 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
 
   const imageCount = project.images?.length || 0
   
-  // Calcular opacidades para todas las imágenes usando useMemo y useTransform
-  const imageOpacities = project.images?.map((_, imgIndex) => {
-    if (imageCount === 0) return useTransform(scrollYProgress, [0, 1], [1, 1])
-    
-    const segmentSize = 1 / imageCount
-    const start = imgIndex * segmentSize
-    const fadeIn = start + segmentSize * 0.1
-    const fadeOut = start + segmentSize * 0.9
-    
-    return useTransform(
-      scrollYProgress,
-      [Math.max(0, fadeIn - 0.1), fadeIn, fadeOut, Math.min(1, fadeOut + 0.1)],
-      [0, 1, 1, 0]
-    )
-  }) || []
+  // Calcular opacidades para todas las imágenes en el nivel superior del componente
+  const imageOpacities: ReturnType<typeof useTransform>[] = []
+  if (project.images && imageCount > 0) {
+    for (let imgIndex = 0; imgIndex < imageCount; imgIndex++) {
+      const segmentSize = 1 / imageCount
+      const start = imgIndex * segmentSize
+      const fadeIn = start + segmentSize * 0.1
+      const fadeOut = start + segmentSize * 0.9
+      
+      imageOpacities.push(
+        useTransform(
+          scrollYProgress,
+          [Math.max(0, fadeIn - 0.1), fadeIn, fadeOut, Math.min(1, fadeOut + 0.1)],
+          [0, 1, 1, 0]
+        )
+      )
+    }
+  }
 
   // Ajustar altura del contenedor según número de imágenes
   const containerHeight = imageCount > 2 ? `${100 + (imageCount - 2) * 50}vh` : '200vh'
@@ -354,6 +365,125 @@ function ProjectWithVideos({ project, index }: { project: Project; index: number
   )
 }
 
+function VimeoEmbed({ videoId }: { videoId: string }) {
+  // Extraer ID de Vimeo si viene como URL completa
+  const getIdFromUrl = (urlOrId: string): string => {
+    if (urlOrId.includes('vimeo.com')) {
+      const match = urlOrId.match(/vimeo\.com\/(\d+)/)
+      return match ? match[1] : urlOrId
+    }
+    return urlOrId
+  }
+
+  const id = getIdFromUrl(videoId)
+  const embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&muted=1&controls=1`
+
+  return (
+    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+      <iframe
+        src={embedUrl}
+        className="w-full h-full"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowFullScreen
+        title={`Vimeo video ${id}`}
+      />
+    </div>
+  )
+}
+
+function ProjectWithVimeo({ project, index }: { project: Project; index: number }) {
+  const itemRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: itemRef,
+    offset: ["start end", "end start"]
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -50])
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  })
+
+  return (
+    <motion.div
+      ref={itemRef}
+      style={{
+        opacity,
+        y,
+      }}
+      className="relative py-32 md:py-40"
+    >
+      <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Project number */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
+        >
+          <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </motion.div>
+
+        {/* Title and description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
+            {project.title}
+          </h3>
+          <p className="text-base md:text-lg text-gray-500 font-extralight mb-8">
+            {project.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-4">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Vimeo videos grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
+          {project.vimeoVideos && project.vimeoVideos.length > 0 ? (
+            project.vimeoVideos.map((videoId, videoIndex) => (
+              <motion.div
+                key={videoIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: videoIndex * 0.1 }}
+              >
+                <VimeoEmbed videoId={videoId} />
+              </motion.div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">Videos de Vimeo próximamente...</p>
+          )}
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
+
 function ProjectItem({ project, index }: { project: Project; index: number }) {
   const itemRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -369,7 +499,12 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
     triggerOnce: false,
   })
 
-  // Si tiene videos, usar el componente especial con grid
+  // Si tiene videos de Vimeo, usar el componente especial
+  if (project.vimeoVideos) {
+    return <ProjectWithVimeo project={project} index={index} />
+  }
+
+  // Si tiene videos locales, usar el componente especial con grid
   if (project.videos) {
     return <ProjectWithVideos project={project} index={index} />
   }
