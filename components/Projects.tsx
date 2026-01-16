@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FaExternalLinkAlt } from 'react-icons/fa'
@@ -12,6 +12,7 @@ interface Project {
   tags: string[]
   liveUrl?: string
   images?: string[] // Para proyectos con imágenes integradas
+  videos?: string[] // Para proyectos con videos
   externalUrl?: string // URL externa para botón
 }
 
@@ -63,6 +64,13 @@ const projects: Project[] = [
     title: 'Motion / Video',
     description: 'Edición y motion básico',
     tags: ['Motion', 'Visual'],
+    videos: [
+      '/videos/1.mp4',
+      '/videos/2.mp4',
+      '/videos/3.mp4',
+      '/videos/4.mp4',
+      '/videos/5.mp4',
+    ],
   },
 ]
 
@@ -202,6 +210,129 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
   )
 }
 
+function VideoPlayer({ src, index }: { src: string; index: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isMuted, setIsMuted] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(true)
+
+  const handleClick = () => {
+    if (videoRef.current) {
+      if (isMuted) {
+        videoRef.current.muted = false
+        setIsMuted(false)
+      }
+      if (!isPlaying) {
+        videoRef.current.play()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  return (
+    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group cursor-pointer" onClick={handleClick}>
+      <video
+        ref={videoRef}
+        src={src}
+        autoPlay
+        loop
+        muted={isMuted}
+        playsInline
+        className="w-full h-full object-cover"
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+      />
+      {/* Audio indicator */}
+      {isMuted && (
+        <div className="absolute top-2 right-2 bg-black/50 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6.343 6.343l11.314 11.314M6.343 17.657L17.657 6.343" />
+          </svg>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ProjectWithVideos({ project, index }: { project: Project; index: number }) {
+  const itemRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: itemRef,
+    offset: ["start end", "end start"]
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -50])
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  })
+
+  return (
+    <motion.div
+      ref={itemRef}
+      style={{
+        opacity,
+        y,
+      }}
+      className="relative py-32 md:py-40"
+    >
+      <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Project number */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
+        >
+          <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </motion.div>
+
+        {/* Title and description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
+            {project.title}
+          </h3>
+          <p className="text-base md:text-lg text-gray-500 font-extralight mb-8">
+            {project.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-4">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Video grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
+          {project.videos?.map((video, videoIndex) => (
+            <VideoPlayer key={videoIndex} src={video} index={videoIndex} />
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
+
 function ProjectItem({ project, index }: { project: Project; index: number }) {
   const itemRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -216,6 +347,11 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
     threshold: 0.1,
     triggerOnce: false,
   })
+
+  // Si tiene videos, usar el componente especial con grid
+  if (project.videos) {
+    return <ProjectWithVideos project={project} index={index} />
+  }
 
   // Si tiene imágenes, usar el componente especial con sticky scroll
   if (project.images) {
