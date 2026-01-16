@@ -70,6 +70,9 @@ const projects: Project[] = [
       '1154880240', // Video 3
       '1154880257', // Video 4
       '1154880283', // Video 5 (horizontal)
+      '1155100598', // Video 6
+      '1155100559', // Video 7
+      '1155100647', // Video 8
     ],
   },
 ]
