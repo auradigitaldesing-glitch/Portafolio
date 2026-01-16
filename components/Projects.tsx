@@ -61,136 +61,112 @@ const projects: Project[] = [
 ]
 
 function ProjectWithImages({ project, index }: { project: Project; index: number }) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const itemRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
+    target: itemRef,
+    offset: ["start end", "end start"]
   })
+
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -50])
 
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: false,
   })
 
-  const imageCount = project.images?.length || 0
-  
-  // Calcular opacidades para todas las imágenes en el nivel superior del componente
-  const imageOpacities: ReturnType<typeof useTransform>[] = []
-  if (project.images && imageCount > 0) {
-    for (let imgIndex = 0; imgIndex < imageCount; imgIndex++) {
-      const segmentSize = 1 / imageCount
-      const start = imgIndex * segmentSize
-      const fadeIn = start + segmentSize * 0.1
-      const fadeOut = start + segmentSize * 0.9
-      
-      imageOpacities.push(
-        useTransform(
-          scrollYProgress,
-          [Math.max(0, fadeIn - 0.1), fadeIn, fadeOut, Math.min(1, fadeOut + 0.1)],
-          [0, 1, 1, 0]
-        )
-      )
-    }
-  }
-
-  // Ajustar altura del contenedor según número de imágenes
-  const containerHeight = imageCount > 2 ? `${100 + (imageCount - 2) * 50}vh` : '200vh'
-  
   return (
-    <div ref={containerRef} style={{ minHeight: containerHeight }} className="relative">
-      {/* Sticky container - se queda fijo mientras cambian las imágenes */}
-      <div className="sticky top-0 min-h-screen flex items-center py-32 md:py-40">
-        <div ref={ref} className="w-full max-w-7xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
-            {/* Left side - Text content */}
-            <div className="relative z-10">
-              {/* Project number */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.8 }}
-                className="mb-12"
+    <motion.div
+      ref={itemRef}
+      style={{
+        opacity,
+        y,
+      }}
+      className="relative py-32 md:py-40"
+    >
+      <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Project number */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
+        >
+          <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </motion.div>
+
+        {/* Title and description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
+            {project.title}
+          </h3>
+          <p className="text-base md:text-lg text-gray-500 font-extralight mb-8">
+            {project.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-4 mb-8">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
               >
-                <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-              </motion.div>
-
-              {/* Title */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="mb-4"
-              >
-                <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
-                  {project.title}
-                </h3>
-                <p className="text-base md:text-lg text-gray-500 font-extralight">
-                  {project.description}
-                </p>
-              </motion.div>
-
-              {/* Tags */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="flex flex-wrap gap-4 mb-8"
-              >
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs text-gray-600 font-extralight tracking-wider uppercase"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </motion.div>
-
-              {/* Button to external site if exists */}
-              {project.externalUrl && (
-                <motion.a
-                  href={project.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-block px-8 py-3 border border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 rounded-lg font-extralight tracking-wide transition-colors duration-300"
-                >
-                  Ver sitio en vivo
-                </motion.a>
-              )}
-            </div>
-
-            {/* Right side - Images that change on scroll */}
-            <div className="relative w-full aspect-square md:aspect-auto md:h-[70vh]">
-              {project.images?.map((image, imgIndex) => (
-                <motion.div
-                  key={imgIndex}
-                  style={{
-                    opacity: imageOpacities[imgIndex],
-                  }}
-                  className="absolute inset-0 w-full h-full"
-                >
-                  <motion.img
-                    src={image}
-                    alt={`${project.title} ${imgIndex + 1}`}
-                    className="w-full h-full object-contain"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                </motion.div>
-              ))}
-            </div>
+                {tag}
+              </span>
+            ))}
           </div>
-        </div>
+
+          {/* Button to external site if exists */}
+          {project.externalUrl && (
+            <motion.a
+              href={project.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block px-8 py-3 border border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 rounded-lg font-extralight tracking-wide transition-colors duration-300"
+            >
+              Ver sitio en vivo
+            </motion.a>
+          )}
+        </motion.div>
+
+        {/* Images grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
+          {project.images?.map((image, imgIndex) => (
+            <motion.div
+              key={imgIndex}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: imgIndex * 0.1 }}
+              className="relative w-full aspect-square bg-black rounded-lg overflow-hidden"
+            >
+              <img
+                src={image}
+                alt={`${project.title} ${imgIndex + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
