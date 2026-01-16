@@ -382,17 +382,19 @@ function VimeoEmbed({ videoId }: { videoId: string }) {
   }
 
   const id = getIdFromUrl(videoId)
-  const embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&muted=1&controls=1`
+  // Configuración del embed de Vimeo con autoplay, loop, muted y controles
+  const embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&muted=1&controls=1&background=0&responsive=1`
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+    <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
       <iframe
         src={embedUrl}
-        className="w-full h-full"
+        className="absolute top-0 left-0 w-full h-full"
         frameBorder="0"
-        allow="autoplay; fullscreen; picture-in-picture"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
         allowFullScreen
         title={`Vimeo video ${id}`}
+        loading="lazy"
       />
     </div>
   )
