@@ -174,7 +174,7 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
               <img
                 src={image}
                 alt={`${project.title} ${imgIndex + 1}`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain rounded-lg"
               />
             </motion.div>
           ))}
