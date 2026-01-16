@@ -210,7 +210,7 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
   )
 }
 
-function VideoPlayer({ src, index }: { src: string; index: number }) {
+function VideoPlayer({ src, index, size = 'normal' }: { src: string; index: number; size?: 'large' | 'normal' | 'small' }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isMuted, setIsMuted] = useState(true)
 
@@ -221,13 +221,19 @@ function VideoPlayer({ src, index }: { src: string; index: number }) {
     }
   }
 
+  const sizeClasses = {
+    large: 'md:col-span-2 md:row-span-2 aspect-video',
+    normal: 'aspect-video',
+    small: 'aspect-square'
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group cursor-pointer"
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className={`relative w-full ${sizeClasses[size]} bg-black rounded-lg overflow-hidden group cursor-pointer`}
       onClick={handleClick}
     >
       <video
@@ -239,14 +245,16 @@ function VideoPlayer({ src, index }: { src: string; index: number }) {
         playsInline
         className="w-full h-full object-cover"
       />
-      {/* Audio indicator - mostrar siempre cuando está muteado */}
+      {/* Audio indicator */}
       {isMuted && (
-        <div className="absolute top-2 right-2 bg-black/70 rounded-full p-2">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <div className="absolute top-3 right-3 bg-black/80 rounded-full p-2.5 backdrop-blur-sm">
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6.343 6.343l11.314 11.314M6.343 17.657L17.657 6.343" />
           </svg>
         </div>
       )}
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </motion.div>
   )
 }
@@ -315,17 +323,32 @@ function ProjectWithVideos({ project, index }: { project: Project; index: number
           </div>
         </motion.div>
 
-        {/* Video grid */}
+        {/* Video grid - Editorial layout */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-fr"
         >
           {project.videos && project.videos.length > 0 ? (
-            project.videos.map((video, videoIndex) => (
-              <VideoPlayer key={videoIndex} src={video} index={videoIndex} />
-            ))
+            project.videos.map((video, videoIndex) => {
+              // Layout asimétrico: primer video más grande, otros distribuidos
+              let size: 'large' | 'normal' | 'small' = 'normal'
+              if (videoIndex === 0) {
+                size = 'large'
+              } else if (videoIndex === project.videos.length - 1 && project.videos.length > 3) {
+                size = 'normal'
+              }
+              
+              return (
+                <VideoPlayer 
+                  key={videoIndex} 
+                  src={video} 
+                  index={videoIndex}
+                  size={size}
+                />
+              )
+            })
           ) : (
             <p className="text-gray-500">No hay videos disponibles</p>
           )}
