@@ -21,7 +21,7 @@ const projects: Project[] = [
     title: 'Elvira Strategy — Web',
     description: 'Diseño web con enfoque visual',
     tags: ['Web', 'Visual'],
-    images: ['/images/elvira.png', '/images/Elvira%202.png'],
+    images: ['/images/elvira.png', '/images/Elvira2.png'],
     externalUrl: 'https://www.elvirastrategy.com/',
   },
   {
