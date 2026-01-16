@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { FaWhatsapp } from 'react-icons/fa'
 
 export default function Contact() {
   const { ref, inView } = useInView({
@@ -49,16 +50,42 @@ export default function Contact() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.4, duration: 0.8 }}
           whileHover={{ y: -2 }}
-          className="inline-block text-2xl md:text-3xl text-gray-400 hover:text-cyan-400 transition-colors duration-300 font-extralight tracking-wide mb-12"
+          className="inline-block text-2xl md:text-3xl text-gray-400 hover:text-cyan-400 transition-colors duration-300 font-extralight tracking-wide mb-6"
         >
           atapiarubio487@gmail.com
+        </motion.a>
+
+        {/* Phone number */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="text-xl md:text-2xl text-gray-500 font-extralight tracking-wide mb-8"
+        >
+          5585862578
+        </motion.div>
+
+        {/* WhatsApp button */}
+        <motion.a
+          href="https://wa.link/p7yp20"
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-lg font-extralight tracking-wide transition-colors duration-300 mb-12"
+        >
+          <FaWhatsapp size={24} />
+          <span>Contactar por WhatsApp</span>
         </motion.a>
         
         {/* Subtle secondary text */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6, duration: 0.8 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
           className="text-sm text-gray-600 font-extralight tracking-wider uppercase"
         >
           Disponible para trabajo remoto, híbrido o en oficina
