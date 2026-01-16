@@ -65,14 +65,14 @@ const projects: Project[] = [
     description: 'Selección de trabajos en video',
     tags: ['Motion', 'Video'],
     vimeoVideos: [
-      '1154880203', // Video 1
-      '1154880225', // Video 2
-      '1154880240', // Video 3
-      '1154880257', // Video 4
-      '1154880283', // Video 5 (horizontal)
-      '1155100598', // Video 6
-      '1155100559', // Video 7
       '1155100647', // Video 8
+      '1155100559', // Video 7
+      '1155100598', // Video 6
+      '1154880283', // Video 5 (horizontal)
+      '1154880257', // Video 4
+      '1154880240', // Video 3
+      '1154880225', // Video 2
+      '1154880203', // Video 1
     ],
   },
 ]
