@@ -88,14 +88,12 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
 
   const imageCount = project.images?.length || 0
   
-  // Calcular opacidad dinámica para cada imagen basado en scroll
-  const getImageOpacity = (imgIndex: number) => {
+  // Calcular opacidades para todas las imágenes usando useMemo y useTransform
+  const imageOpacities = project.images?.map((_, imgIndex) => {
     if (imageCount === 0) return useTransform(scrollYProgress, [0, 1], [1, 1])
     
     const segmentSize = 1 / imageCount
     const start = imgIndex * segmentSize
-    const mid = start + segmentSize * 0.3
-    const end = start + segmentSize
     const fadeIn = start + segmentSize * 0.1
     const fadeOut = start + segmentSize * 0.9
     
@@ -104,7 +102,7 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
       [Math.max(0, fadeIn - 0.1), fadeIn, fadeOut, Math.min(1, fadeOut + 0.1)],
       [0, 1, 1, 0]
     )
-  }
+  }) || []
 
   // Ajustar altura del contenedor según número de imágenes
   const containerHeight = imageCount > 2 ? `${100 + (imageCount - 2) * 50}vh` : '200vh'
@@ -181,27 +179,24 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
 
             {/* Right side - Images that change on scroll */}
             <div className="relative w-full aspect-square md:aspect-auto md:h-[70vh]">
-              {project.images?.map((image, imgIndex) => {
-                const imageOpacity = getImageOpacity(imgIndex)
-                return (
-                  <motion.div
-                    key={imgIndex}
-                    style={{
-                      opacity: imageOpacity,
-                    }}
-                    className="absolute inset-0 w-full h-full"
-                  >
-                    <motion.img
-                      src={image}
-                      alt={`${project.title} ${imgIndex + 1}`}
-                      className="w-full h-full object-contain"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={inView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                  </motion.div>
-                )
-              })}
+              {project.images?.map((image, imgIndex) => (
+                <motion.div
+                  key={imgIndex}
+                  style={{
+                    opacity: imageOpacities[imgIndex],
+                  }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <motion.img
+                    src={image}
+                    alt={`${project.title} ${imgIndex + 1}`}
+                    className="w-full h-full object-contain"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
