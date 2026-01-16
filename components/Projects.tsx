@@ -12,6 +12,7 @@ interface Project {
   tags: string[]
   liveUrl?: string
   images?: string[] // Para proyectos con imágenes integradas
+  externalUrl?: string // URL externa para botón
 }
 
 const projects: Project[] = [
@@ -20,7 +21,8 @@ const projects: Project[] = [
     title: 'Elvira Strategy — Web',
     description: 'Diseño web con enfoque visual',
     tags: ['Web', 'Visual'],
-    liveUrl: '/elvira',
+    images: ['/images/elvira.png', '/images/Elvira%202.png'],
+    externalUrl: 'https://www.elvirastrategy.com/',
   },
   {
     id: 2,
@@ -50,19 +52,12 @@ const projects: Project[] = [
   },
 ]
 
-function IllustrationsProject({ project, index }: { project: Project; index: number }) {
+function ProjectWithImages({ project, index }: { project: Project; index: number }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   })
-
-  // Calcular qué imagen mostrar basado en el scroll
-  const imageIndex = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [0, 1, 1]
-  )
 
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -113,7 +108,7 @@ function IllustrationsProject({ project, index }: { project: Project; index: num
                 initial={{ opacity: 0 }}
                 animate={inView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="flex flex-wrap gap-4 mt-8"
+                className="flex flex-wrap gap-4 mb-8"
               >
                 {project.tags.map((tag) => (
                   <span
@@ -124,6 +119,23 @@ function IllustrationsProject({ project, index }: { project: Project; index: num
                   </span>
                 ))}
               </motion.div>
+
+              {/* Button to external site if exists */}
+              {project.externalUrl && (
+                <motion.a
+                  href={project.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-block px-8 py-3 border border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 rounded-lg font-extralight tracking-wide transition-colors duration-300"
+                >
+                  Ver sitio en vivo
+                </motion.a>
+              )}
             </div>
 
             {/* Right side - Images that change on scroll */}
@@ -138,7 +150,7 @@ function IllustrationsProject({ project, index }: { project: Project; index: num
                 >
                   <motion.img
                     src={image}
-                    alt={`Ilustración ${imgIndex + 1}`}
+                    alt={`${project.title} ${imgIndex + 1}`}
                     className="w-full h-full object-contain"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -169,9 +181,9 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
     triggerOnce: false,
   })
 
-  // Si tiene imágenes, usar el componente especial
+  // Si tiene imágenes, usar el componente especial con sticky scroll
   if (project.images) {
-    return <IllustrationsProject project={project} index={index} />
+    return <ProjectWithImages project={project} index={index} />
   }
 
   return (
