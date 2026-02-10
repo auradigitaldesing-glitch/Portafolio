@@ -23,18 +23,18 @@ const skills: Skill[] = [
   { name: 'Manejo de IA', shortName: 'IA', level: 5, maxLevel: 5 },
 ]
 
-// Posiciones radiales desktop (% del contenedor) — distribución circular simétrica
+// Posiciones radiales desktop (% del contenedor cuadrado) — círculo perfecto R=40%
 const desktopPositions = [
-  { x: 50, y: 8 },   // Illustrator — arriba centro
-  { x: 73, y: 17 },  // Photoshop — arriba derecha
-  { x: 87, y: 38 },  // After Effects — derecha superior
-  { x: 87, y: 62 },  // Premiere Pro — derecha inferior
-  { x: 73, y: 83 },  // Figma — abajo derecha
-  { x: 50, y: 92 },  // Canva — abajo centro
-  { x: 27, y: 83 },  // Affinity — abajo izquierda
-  { x: 13, y: 62 },  // Producción AV — izquierda inferior
-  { x: 13, y: 38 },  // Código Web — izquierda superior
-  { x: 27, y: 17 },  // IA — arriba izquierda
+  { x: 50, y: 10 },  // Illustrator — arriba centro
+  { x: 74, y: 18 },  // Photoshop — arriba derecha
+  { x: 88, y: 38 },  // After Effects — derecha superior
+  { x: 88, y: 62 },  // Premiere Pro — derecha inferior
+  { x: 74, y: 82 },  // Figma — abajo derecha
+  { x: 50, y: 90 },  // Canva — abajo centro
+  { x: 26, y: 82 },  // Affinity — abajo izquierda
+  { x: 12, y: 62 },  // Producción AV — izquierda inferior
+  { x: 12, y: 38 },  // Código Web — izquierda superior
+  { x: 26, y: 18 },  // IA — arriba izquierda
 ]
 
 const CENTER = { x: 50, y: 50 }
@@ -189,7 +189,7 @@ export default function SkillTreeSection() {
       </motion.h2>
 
       {/* ═══ DESKTOP: layout radial ═══ */}
-      <div className="hidden md:block relative max-w-5xl mx-auto min-h-[750px]">
+      <div className="hidden md:block relative max-w-4xl mx-auto aspect-square">
         <Lines />
 
         {/* Nodo central */}
