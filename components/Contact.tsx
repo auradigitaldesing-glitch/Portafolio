@@ -24,7 +24,7 @@ export default function Contact() {
     <motion.section
       ref={containerRef}
       style={{ opacity, y }}
-      className="relative min-h-screen flex items-center justify-center px-6 py-40"
+      className="relative min-h-[auto] md:min-h-screen flex items-center justify-center px-6 py-16 md:py-40"
     >
       <motion.div
         ref={ref}
@@ -38,7 +38,7 @@ export default function Contact() {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-6xl md:text-8xl font-extralight text-white mb-16 tracking-tight"
+          className="text-6xl md:text-8xl font-extralight text-white mb-8 md:mb-16 tracking-tight"
         >
           ¿Hablamos?
         </motion.h2>

@@ -23,7 +23,7 @@ export default function About() {
     <motion.section
       ref={containerRef}
       style={{ opacity, y }}
-      className="relative min-h-screen flex items-center justify-center px-6 py-40"
+      className="relative min-h-[auto] md:min-h-screen flex items-center justify-center px-6 py-16 md:py-40"
     >
       <motion.div
         ref={ref}

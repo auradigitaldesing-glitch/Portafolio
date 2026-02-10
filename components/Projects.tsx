@@ -99,7 +99,7 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
         opacity,
         y,
       }}
-      className="relative py-32 md:py-40"
+      className="relative py-12 md:py-40"
     >
       <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Project number */}
@@ -107,7 +107,7 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-6 md:mb-12"
         >
           <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
             {String(index + 1).padStart(2, '0')}
@@ -119,17 +119,17 @@ function ProjectWithImages({ project, index }: { project: Project; index: number
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-12"
+          className="mb-6 md:mb-12"
         >
           <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
             {project.title}
           </h3>
-          <p className="text-base md:text-lg text-gray-500 font-extralight mb-8">
+          <p className="text-base md:text-lg text-gray-500 font-extralight mb-4 md:mb-8">
             {project.description}
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-4 mb-8">
+          <div className="flex flex-wrap gap-4 mb-4 md:mb-8">
             {project.tags.map((tag) => (
               <span
                 key={tag}
@@ -237,7 +237,7 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
         opacity,
         y,
       }}
-      className="relative py-32 md:py-40"
+      className="relative py-12 md:py-40"
     >
       <div ref={ref} className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Project number */}
@@ -245,7 +245,7 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-6 md:mb-12"
         >
           <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
             {String(index + 1).padStart(2, '0')}
@@ -257,12 +257,12 @@ function ProjectWithVimeo({ project, index }: { project: Project; index: number 
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-12"
+          className="mb-6 md:mb-12"
         >
           <h3 className="text-4xl md:text-6xl font-extralight text-white leading-tight mb-3">
             {project.title}
           </h3>
-          <p className="text-base md:text-lg text-gray-500 font-extralight mb-8">
+          <p className="text-base md:text-lg text-gray-500 font-extralight mb-4 md:mb-8">
             {project.description}
           </p>
 
@@ -338,7 +338,7 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
         opacity,
         y,
       }}
-      className="relative py-32 md:py-40"
+      className="relative py-12 md:py-40"
     >
       <div ref={ref} className="max-w-5xl mx-auto px-6 md:px-12">
         {/* Project number - large and subtle */}
@@ -346,7 +346,7 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-6 md:mb-12"
         >
           <span className="text-8xl md:text-9xl font-extralight text-gray-900 leading-none">
             {String(index + 1).padStart(2, '0')}
