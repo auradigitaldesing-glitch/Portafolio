@@ -190,8 +190,6 @@ export default function SkillTreeSection() {
 
       {/* ═══ DESKTOP: layout radial ═══ */}
       <div className="hidden md:block relative max-w-4xl mx-auto aspect-square">
-        <Lines />
-
         {/* Nodo central */}
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
