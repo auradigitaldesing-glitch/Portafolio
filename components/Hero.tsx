@@ -123,10 +123,10 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.4 }}
             className="absolute top-0 right-0 w-full aspect-[9/16] bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-800/50 shadow-2xl"
           >
-            <div className="p-4 h-full flex items-center justify-center">
-              <div className="w-16 h-16 border-2 border-gray-700 rounded-full flex items-center justify-center">
-                <div className="w-0 h-0 border-l-[12px] border-l-gray-600 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
-              </div>
+            <div className="p-4 space-y-2">
+              <div className="h-2 bg-gray-700/50 rounded w-1/4"></div>
+              <div className="h-2 bg-gray-700/30 rounded w-1/2"></div>
+              <div className="h-2 bg-gray-700/30 rounded w-1/3"></div>
             </div>
           </motion.div>
           
