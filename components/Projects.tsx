@@ -401,13 +401,20 @@ function ProjectWithCarousel({ project, index }: { project: Project; index: numb
     triggerOnce: false,
   })
 
+  // Construir lista de media items
+  const mediaItems: MediaItem[] = project.media
+    ? project.media
+    : project.images
+    ? project.images.map((src) => ({ type: 'image' as const, src }))
+    : []
+
   return (
     <motion.div
       ref={itemRef}
       style={{ opacity, y }}
       className="relative py-12 md:py-40"
     >
-      <div ref={ref} className="max-w-2xl mx-auto px-6 md:px-12">
+      <div ref={ref} className="max-w-2xl md:max-w-7xl mx-auto px-6 md:px-12">
         {/* Project number */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -447,20 +454,50 @@ function ProjectWithCarousel({ project, index }: { project: Project; index: numb
           </div>
         </motion.div>
 
-        {/* Carousel */}
+        {/* Mobile: Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
+          className="block md:hidden"
         >
-          {project.media ? (
-            <MediaCarousel items={project.media} title={project.title} />
-          ) : project.images ? (
-            <MediaCarousel
-              items={project.images.map((src) => ({ type: 'image' as const, src }))}
-              title={project.title}
-            />
-          ) : null}
+          <MediaCarousel items={mediaItems} title={project.title} />
+        </motion.div>
+
+        {/* Desktop: Grid extendido */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
+          {mediaItems.map((item, itemIndex) => (
+            <motion.div
+              key={itemIndex}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: itemIndex * 0.05 }}
+              className="relative w-full aspect-square bg-black rounded-lg overflow-hidden"
+            >
+              {item.type === 'video' ? (
+                <video
+                  src={item.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              ) : (
+                <img
+                  src={item.src}
+                  alt={`${project.title} ${itemIndex + 1}`}
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              )}
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </motion.div>
