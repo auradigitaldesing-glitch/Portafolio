@@ -5,6 +5,11 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
+interface MediaItem {
+  type: 'image' | 'video'
+  src: string
+}
+
 interface Project {
   id: number
   title: string
@@ -15,6 +20,7 @@ interface Project {
   vimeoVideos?: string[] // Para proyectos con videos de Vimeo (IDs)
   externalUrl?: string // URL externa para botón
   carousel?: boolean // Mostrar imágenes en carrusel
+  media?: MediaItem[] // Para carrusel mixto (imágenes + videos)
 }
 
 const projects: Project[] = [
@@ -43,6 +49,51 @@ const projects: Project[] = [
   },
   {
     id: 4,
+    title: 'Personajes IA',
+    description: 'Personajes generados con inteligencia artificial',
+    tags: ['IA', 'Ilustración', 'Visual'],
+    carousel: true,
+    media: [
+      { type: 'image', src: '/images/personajes/1.png' },
+      { type: 'image', src: '/images/personajes/Personajes-1.png' },
+      { type: 'image', src: '/images/personajes/Personajes-2.png' },
+      { type: 'image', src: '/images/personajes/Personajes-3.png' },
+      { type: 'image', src: '/images/personajes/Personajes-4.png' },
+      { type: 'image', src: '/images/personajes/Personajes-5.png' },
+      { type: 'image', src: '/images/personajes/Personajes-7.png' },
+      { type: 'image', src: '/images/personajes/Personajes-8.png' },
+      { type: 'image', src: '/images/personajes/Personajes-.png' },
+      { type: 'image', src: '/images/personajes/Peronsajes-9.png' },
+      { type: 'image', src: '/images/personajes/Alf-1.png' },
+      { type: 'image', src: '/images/personajes/Alf-2.png' },
+      { type: 'image', src: '/images/personajes/Alf-3.png' },
+      { type: 'image', src: '/images/personajes/Alf-4.png' },
+      { type: 'image', src: '/images/personajes/Alf-5.png' },
+      { type: 'image', src: '/images/personajes/Mini-Alf-1.png' },
+      { type: 'image', src: '/images/personajes/I-.want.png' },
+      { type: 'image', src: '/images/personajes/7.png' },
+      { type: 'image', src: '/images/personajes/8.png' },
+      { type: 'image', src: '/images/personajes/9.png' },
+      { type: 'image', src: '/images/personajes/10.png' },
+      { type: 'image', src: '/images/personajes/11.png' },
+      { type: 'image', src: '/images/personajes/14.png' },
+      { type: 'image', src: '/images/personajes/15.png' },
+      { type: 'image', src: '/images/personajes/16.png' },
+      { type: 'image', src: '/images/personajes/17.png' },
+      { type: 'image', src: '/images/personajes/18.png' },
+      { type: 'image', src: '/images/personajes/19.png' },
+      { type: 'image', src: '/images/personajes/20.png' },
+      { type: 'image', src: '/images/personajes/21.png' },
+      { type: 'video', src: '/videos/personajes/2.mp4' },
+      { type: 'video', src: '/videos/personajes/21.mp4' },
+      { type: 'video', src: '/videos/personajes/22.mp4' },
+      { type: 'video', src: '/videos/personajes/23.mp4' },
+      { type: 'video', src: '/videos/personajes/Peronsaje-10.mp4' },
+      { type: 'video', src: '/videos/personajes/Personajes-360.mp4' },
+    ],
+  },
+  {
+    id: 5,
     title: 'Contenido visual para redes',
     description: 'Piezas gráficas para comunicación',
     tags: ['Contenido', 'Visual'],
@@ -62,7 +113,7 @@ const projects: Project[] = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     title: 'Motion / Video',
     description: 'Selección de trabajos en video',
     tags: ['Motion', 'Video'],
@@ -194,17 +245,17 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity
 }
 
-function ImageCarousel({ images, title }: { images: string[]; title: string }) {
+function MediaCarousel({ items, title }: { items: MediaItem[]; title: string }) {
   const [[page, direction], setPage] = useState([0, 0])
 
   const paginate = useCallback((newDirection: number) => {
     setPage(([prevPage]) => {
       let nextPage = prevPage + newDirection
-      if (nextPage < 0) nextPage = images.length - 1
-      if (nextPage >= images.length) nextPage = 0
+      if (nextPage < 0) nextPage = items.length - 1
+      if (nextPage >= items.length) nextPage = 0
       return [nextPage, newDirection]
     })
-  }, [images.length])
+  }, [items.length])
 
   const variants = {
     enter: (direction: number) => ({
@@ -223,37 +274,75 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
     }),
   }
 
+  const currentItem = items[page]
+
   return (
     <div className="relative w-full">
       {/* Carousel container */}
       <div className="relative w-full aspect-square overflow-hidden rounded-lg bg-black">
         <AnimatePresence initial={false} custom={direction}>
-          <motion.img
-            key={page}
-            src={images[page]}
-            alt={`${title} ${page + 1}`}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: 'spring', stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={(_e, { offset, velocity }) => {
-              const swipe = swipePower(offset.x, velocity.x)
-              if (swipe < -swipeConfidenceThreshold) {
-                paginate(1)
-              } else if (swipe > swipeConfidenceThreshold) {
-                paginate(-1)
-              }
-            }}
-            className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing"
-          />
+          {currentItem.type === 'video' ? (
+            <motion.div
+              key={page}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: 'spring', stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(_e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x)
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1)
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1)
+                }
+              }}
+              className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing flex items-center justify-center"
+            >
+              <video
+                src={currentItem.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-contain"
+              />
+            </motion.div>
+          ) : (
+            <motion.img
+              key={page}
+              src={currentItem.src}
+              alt={`${title} ${page + 1}`}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: 'spring', stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(_e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x)
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1)
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1)
+                }
+              }}
+              className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing"
+            />
+          )}
         </AnimatePresence>
       </div>
 
@@ -273,25 +362,25 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
         <FaChevronRight size={14} />
       </button>
 
-      {/* Dots indicator */}
-      <div className="flex items-center justify-center gap-1.5 mt-4">
-        {images.map((_, i) => (
+      {/* Dots indicator - grouped for many items */}
+      <div className="flex items-center justify-center gap-1 mt-4 flex-wrap max-w-xs mx-auto">
+        {items.map((_, i) => (
           <button
             key={i}
             onClick={() => setPage([i, i > page ? 1 : -1])}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
               i === page
-                ? 'bg-cyan-400 w-6'
-                : 'bg-gray-600 hover:bg-gray-500'
+                ? 'bg-cyan-400 w-5'
+                : 'bg-gray-700 hover:bg-gray-500'
             }`}
-            aria-label={`Ir a imagen ${i + 1}`}
+            aria-label={`Ir a ${i + 1}`}
           />
         ))}
       </div>
 
       {/* Counter */}
       <div className="text-center mt-2 text-sm text-gray-500 font-extralight">
-        {page + 1} / {images.length}
+        {page + 1} / {items.length}
       </div>
     </div>
   )
@@ -364,7 +453,14 @@ function ProjectWithCarousel({ project, index }: { project: Project; index: numb
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          {project.images && <ImageCarousel images={project.images} title={project.title} />}
+          {project.media ? (
+            <MediaCarousel items={project.media} title={project.title} />
+          ) : project.images ? (
+            <MediaCarousel
+              items={project.images.map((src) => ({ type: 'image' as const, src }))}
+              title={project.title}
+            />
+          ) : null}
         </motion.div>
       </div>
     </motion.div>
@@ -510,8 +606,8 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
     return <ProjectWithVimeo project={project} index={index} />
   }
 
-  // Si tiene imágenes en carrusel
-  if (project.images && project.carousel) {
+  // Si tiene media o imágenes en carrusel
+  if ((project.images || project.media) && project.carousel) {
     return <ProjectWithCarousel project={project} index={index} />
   }
 
