@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import SkillTreeSection from '@/components/SkillTreeSection'
 import Projects from '@/components/Projects'
 import About from '@/components/About'
 import Contact from '@/components/Contact'
@@ -25,6 +26,7 @@ export default function Home() {
       />
 
       <Hero />
+      <SkillTreeSection />
       <Projects />
       <About />
       <Contact />
