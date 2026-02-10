@@ -45,7 +45,7 @@ const projects: Project[] = [
     title: 'Ilustración digital',
     description: 'Exploración visual',
     tags: ['Ilustración', 'Visual'],
-    images: ['/images/Ilustraciones-01.png', '/images/Ilustraciones-02.png'],
+    images: ['/images/Ilustraciones-01.png', '/images/Ilustraciones-02.png', '/images/Ilustraciones-03.png', '/images/Ilustraciones-04.png'],
   },
   {
     id: 4,
